@@ -21,12 +21,10 @@
 
 #pragma once
 #include <string_view>
-#include <vector>
 
 namespace StringViewUtil
 {
-	void Split(
+	std::string_view Trim(
 		const std::string_view& input,
-		std::string_view::value_type delim,
-		std::vector<std::string_view>& results);
+		const std::string_view& trimChars);
 }

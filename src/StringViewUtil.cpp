@@ -21,79 +21,23 @@
 
 #include "StringViewUtil.h"
 
-void StringViewUtil::Split(
-	const std::string_view& input,
-	std::string_view::value_type delim,
-	std::vector<std::string_view>& results)
+std::string_view StringViewUtil::Trim(const std::string_view& input, const std::string_view& trimChars)
 {
-	// The following code is adapted from: https://stackoverflow.com/a/36301144
+	std::string_view result = input;
 
-	const size_t inputLength = input.length();
-	bool foundDoubleQuote = false;
-	bool foundSingleQuote = false;
-	size_t argumentLength = 0;
+	const auto prefixEnd = input.find_first_not_of(trimChars);
 
-	for (size_t i = 0; i < inputLength; i++)
+	if (prefixEnd != std::string_view::npos)
 	{
-		size_t start = i;
-		if (input[i] == '\"')
-		{
-			foundDoubleQuote = true;
-		}
-		else if (input[i] == '\'')
-		{
-			foundSingleQuote = true;
-		}
-
-		if (foundDoubleQuote)
-		{
-			i++;
-			start++;
-
-			while (i < inputLength && input[i] != '\"')
-			{
-				i++;
-			}
-
-			if (i < inputLength)
-			{
-				foundDoubleQuote = false;
-			}
-
-			argumentLength = i - start;
-			i++;
-		}
-		else if (foundSingleQuote)
-		{
-			i++;
-			start++;
-
-			while (i < inputLength && input[i] != '\'')
-			{
-				i++;
-			}
-
-			if (i < inputLength)
-			{
-				foundSingleQuote = false;
-			}
-
-			argumentLength = i - start;
-			i++;
-		}
-		else
-		{
-			while (i < inputLength && input[i] != delim)
-			{
-				i++;
-			}
-			argumentLength = i - start;
-		}
-
-		if (argumentLength > 0)
-		{
-			results.push_back(input.substr(start, argumentLength));
-		}
+		result.remove_prefix(prefixEnd);
 	}
-}
 
+	const auto suffixStart = input.find_last_not_of(trimChars);
+
+	if (suffixStart)
+	{
+		result.remove_suffix(suffixStart);
+	}
+
+	return result;
+}

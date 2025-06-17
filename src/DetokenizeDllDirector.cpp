@@ -61,7 +61,7 @@ static constexpr std::array<uint32_t, 2> RequiredNotifications =
 static constexpr uint32_t kDetokenizeDllDirector = 0x45519D62;
 
 static constexpr uint32_t kDetokenizeCheatID = 0x73D84360;
-static constexpr const char* const kDetokenizeCheatString = "Detokenize";
+static constexpr std::string_view kDetokenizeCheatString = "Detokenize";
 
 static constexpr std::string_view PluginLogFileName = "SC4Detokenize.log";
 
@@ -127,7 +127,9 @@ private:
 	void PostCityInit()
 	{
 		pCheatMgr->AddNotification2(this, 0);
-		pCheatMgr->RegisterCheatCode(kDetokenizeCheatID, cRZBaseString(kDetokenizeCheatString));
+		pCheatMgr->RegisterCheatCode(
+			kDetokenizeCheatID,
+			cRZBaseString(kDetokenizeCheatString.data(), kDetokenizeCheatString.size()));
 	}
 
 	void PreCityShutdown()
@@ -146,40 +148,37 @@ private:
 
 			if (cheatStr)
 			{
-				std::vector<std::string_view> args;
-				args.reserve(2);
+				const std::string_view cheatStrAsStringView(cheatStr->Data(), cheatStr->Strlen());
+				std::string_view command;
 
-				StringViewUtil::Split(
-					std::string_view(cheatStr->Data(), cheatStr->Strlen()),
-					' ',
-					args);
-
-				if (args.size() == 2)
+				if (cheatStrAsStringView.size() > (kDetokenizeCheatString.size() + 1))
 				{
-					const std::string_view& command = args[1];
+					command = cheatStrAsStringView.substr(kDetokenizeCheatString.size() + 1);
+				}
 
-					if (command.size() > 0)
+				if (command.size() > 0)
+				{
+					cRZBaseString tokenizedValue;
+
+					if (command[0] != '#')
 					{
-						cRZBaseString tokenizedValue;
-
-						if (command[0] != '#')
-						{
-							tokenizedValue.Append("#", 1);
-						}
-
-						tokenizedValue.Append(command.data(), command.size());
-
-						if (command[command.size() - 1] != '#')
-						{
-							tokenizedValue.Append("#", 1);
-						}
-
-						cRZBaseString output;
-
-						pDetokenizer->Detokenize(tokenizedValue, output);
-
-						SC4NotificationDialog::ShowDialog(output, cRZBaseString(kDetokenizeCheatString));
+						tokenizedValue.Append("#", 1);
 					}
+
+					tokenizedValue.Append(command.data(), command.size());
+
+					if (command[command.size() - 1] != '#')
+					{
+						tokenizedValue.Append("#", 1);
+					}
+
+					cRZBaseString output;
+
+					pDetokenizer->Detokenize(tokenizedValue, output);
+
+					SC4NotificationDialog::ShowDialog(
+						output,
+						cRZBaseString(kDetokenizeCheatString.data(), kDetokenizeCheatString.size()));
 				}
 			}
 		}
