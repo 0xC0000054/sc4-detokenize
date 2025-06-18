@@ -13,14 +13,14 @@ The DLL  can be downloaded from the Releases tab: https://github.com/0xC0000054/
 ## System Requirements
 
 * Windows 10 or later
+* [Microsoft Visual C++ 2022 x86 Redistribute](https://aka.ms/vs/17/release/vc_redist.x86.exe)
 
-The plugin may work on Windows 7 or later with the [Microsoft Visual C++ 2022 x86 Redistribute](https://aka.ms/vs/17/release/vc_redist.x86.exe)
-installed, but I do not have the ability to test that.
+The plugin may work on Windows 7, but I do not have the ability to test that.
 
 ## Installation
 
 1. Close SimCity 4.
-2. Copy `SC4Detokenize.dll` into the Plugins folder in the SimCity 4 installation directory.
+2. Copy `SC4Detokenize.dll` into the top-level of the Plugins folder in the SimCity 4 installation directory or Documents/SimCity 4 directory.
 3. Start SimCity 4.
 
 ## Usage
@@ -29,8 +29,7 @@ The Detokenize cheat takes a the name of the text token to resolve and any requi
 Examples:
 
 * _Detokenize game.ga\_mayor\_rating_ will display the numeric value of the mayor rating.
-* _Detokenize GetDirectory UserPlugins_ will display the path to the user plugins folder,
-typically _Documents\SimCity 4\Plugins_.
+* _Detokenize GetDirectory UserPlugins_ will display the path to the user plugins folder, typically _Documents\SimCity 4\Plugins_.
 
 ## Troubleshooting
 
