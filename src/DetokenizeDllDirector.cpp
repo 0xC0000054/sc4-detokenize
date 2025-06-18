@@ -35,6 +35,7 @@
 #include "cRZAutoRefCount.h"
 #include "cRZBaseString.h"
 #include "cRZMessage2COMDirector.h"
+#include "CommandParameterSetUtil.h"
 #include "GZServPtrs.h"
 #include "SC4NotificationDialog.h"
 #include "StringViewUtil.h"
@@ -74,6 +75,49 @@ namespace
 		std::filesystem::path temp(modulePath.get());
 
 		return temp.parent_path();
+	}
+
+	bool TryProcessCommand(const std::string_view& input, cRZBaseString& output)
+	{
+		bool result = false;
+
+		const std::string_view command = StringViewUtil::Trim(input, "#");
+
+		if (command.size() > 0)
+		{
+			cIGZCommandServerPtr commandServer;
+
+			if (commandServer)
+			{
+				uint32_t commandID = 0;
+				cIGZCommandParameterSet* pInputParams = nullptr;
+
+				if (commandServer->ConvertStringToCommand(
+					command.data(),
+					command.size(),
+					commandID,
+					pInputParams))
+				{
+					cRZAutoRefCount<cIGZCommandParameterSet> outputParams;
+
+					if (commandServer->CreateCommandParameterSet(outputParams.AsPPObj()))
+					{
+						commandServer->ExecuteCommand(commandID, pInputParams, outputParams);
+
+						CommandParameterSetUtil::OutputToString(commandServer, outputParams, output);
+					}
+
+					if (pInputParams)
+					{
+						pInputParams->Release();
+					}
+
+					result = true;
+				}
+			}
+		}
+
+		return result;
 	}
 }
 
@@ -151,30 +195,33 @@ private:
 				const std::string_view cheatStrAsStringView(cheatStr->Data(), cheatStr->Strlen());
 				std::string_view command;
 
-				if (cheatStrAsStringView.size() > (kDetokenizeCheatString.size() + 1))
+				if (cheatStrAsStringView.size() > kDetokenizeCheatString.size())
 				{
-					command = cheatStrAsStringView.substr(kDetokenizeCheatString.size() + 1);
+					command = StringViewUtil::Trim(cheatStrAsStringView.substr(kDetokenizeCheatString.size()), " ");
 				}
 
 				if (command.size() > 0)
 				{
-					cRZBaseString tokenizedValue;
-
-					if (command[0] != '#')
-					{
-						tokenizedValue.Append("#", 1);
-					}
-
-					tokenizedValue.Append(command.data(), command.size());
-
-					if (command[command.size() - 1] != '#')
-					{
-						tokenizedValue.Append("#", 1);
-					}
-
 					cRZBaseString output;
 
-					pDetokenizer->Detokenize(tokenizedValue, output);
+					if (!TryProcessCommand(command, output))
+					{
+						cRZBaseString tokenizedValue;
+
+						if (command[0] != '#')
+						{
+							tokenizedValue.Append("#", 1);
+						}
+
+						tokenizedValue.Append(command.data(), command.size());
+
+						if (command[command.size() - 1] != '#')
+						{
+							tokenizedValue.Append("#", 1);
+						}
+
+						pDetokenizer->Detokenize(tokenizedValue, output);
+					}
 
 					SC4NotificationDialog::ShowDialog(
 						output,

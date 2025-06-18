@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="..\vendor\gzcom-dll\gzcom-dll\include\cIGZFrameWork.h" />
     <ClInclude Include="..\vendor\gzcom-dll\gzcom-dll\include\cRZCOMDllDirector.h" />
+    <ClInclude Include="CommandParameterSetUtil.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SC4NotificationDialog.h" />
@@ -35,6 +36,7 @@
     <ClCompile Include="..\vendor\gzcom-dll\gzcom-dll\src\SCLuaUtil.cpp" />
     <ClCompile Include="..\vendor\gzcom-dll\gzcom-dll\src\SCPropertyUtil.cpp" />
     <ClCompile Include="..\vendor\gzcom-dll\gzcom-dll\src\StringResourceManager.cpp" />
+    <ClCompile Include="CommandParameterSetUtil.cpp" />
     <ClCompile Include="DetokenizeDllDirector.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="SC4NotificationDialog.cpp" />

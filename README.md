@@ -5,7 +5,7 @@ A DLL Plugin for SimCity 4 that adds a cheat to display text token values.
 This DLL is intended for experimentation and debugging, I am not sure it is useful for normal game play.
 
 Text tokens are strings enclosed in # characters that SC4 will resolve to another value.
-For example, `Detokenize game.g_city_rci_population` would display the value of the total RCI population variable 
+For example, _Detokenize game.g\_city\_rci\_population_ would display the value of the total RCI population variable 
 that Lua scripts can use in trigger conditions.
 
 The DLL  can be downloaded from the Releases tab: https://github.com/0xC0000054/sc4-detokenize/releases
@@ -25,8 +25,12 @@ installed, but I do not have the ability to test that.
 
 ## Usage
 
-The Detokenize cheat takes a single string parameter, the name of the text token to resolve.
-E.g. `Detokenize game.ga_mayor_rating` will display the numeric value of the mayor rating.
+The Detokenize cheat takes a the name of the text token to resolve and any required parameters.   
+Examples:
+
+* _Detokenize game.ga\_mayor\_rating_ will display the numeric value of the mayor rating.
+* _Detokenize GetDirectory UserPlugins_ will display the path to the user plugins folder,
+typically _Documents\SimCity 4\Plugins_.
 
 ## Troubleshooting
 
