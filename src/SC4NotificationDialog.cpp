@@ -138,11 +138,11 @@ void SC4NotificationDialog::ShowDialog(StringResourceKey const& messageKey, Stri
 {
 	cRZAutoRefCount<cIGZString> message;
 
-	if (StringResourceManager::GetLocalizedString(messageKey, message.AsPPObj()))
+	if (StringResourceManager::GetLocalizedString(messageKey, message))
 	{
 		cRZAutoRefCount<cIGZString> caption;
 
-		if (StringResourceManager::GetLocalizedString(captionKey, caption.AsPPObj()))
+		if (StringResourceManager::GetLocalizedString(captionKey, caption))
 		{
 			ShowNotificationDialog(*message, *caption);
 		}
