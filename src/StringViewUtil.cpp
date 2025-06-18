@@ -34,9 +34,10 @@ std::string_view StringViewUtil::Trim(const std::string_view& input, const std::
 
 	const auto suffixStart = input.find_last_not_of(trimChars);
 
-	if (suffixStart)
+	if (suffixStart != std::string_view::npos
+		&& suffixStart != result.size())
 	{
-		result.remove_suffix(suffixStart);
+		result.remove_suffix(result.size() - suffixStart);
 	}
 
 	return result;
